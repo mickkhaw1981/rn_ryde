@@ -1,0 +1,42 @@
+{
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "prettier.singleQuote": true,
+    "prettier.jsxSingleQuote": true,
+    "prettier.trailingComma": "es5",
+    "prettier.semi": true,
+    "prettier.printWidth": 100,
+    "prettier.tabWidth": 2,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true,
+      "source.fixAll.eslint": true
+    },
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "files.associations": {
+      "*.js": "javascriptreact",
+      "*.jsx": "javascriptreact"
+    },
+    "[javascriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "emmet.includeLanguages": {
+      "javascript": "javascriptreact"
+    }
+  }
