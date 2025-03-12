@@ -20,6 +20,17 @@ const Welcome = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const isLastSlide = currentIndex === onboarding.length - 1;
 
+  // Handle button press logic
+  const handleButtonPress = () => {
+    if (isLastSlide) {
+      // Navigate to sign-up page
+      router.replace("/(auth)/sign-up");
+    } else {
+      // Go to next slide
+      swiperRef.current?.scrollBy(1);
+    }
+  };
+
   return (
     <SafeAreaView className="flex h-full items-center justify-between bg-white">
       {/* Skip button */}
@@ -75,13 +86,7 @@ const Welcome = () => {
       <View className="w-full px-6 mb-8">
         <PrimaryButton
           title={isLastSlide ? "Get Started" : "Next"}
-          onPress={() => {
-            if (isLastSlide) {
-              router.replace("/(auth)/sign-up");
-            } else {
-              swiperRef.current?.scrollBy(1);
-            }
-          }}
+          onPress={handleButtonPress}
         />
       </View>
     </SafeAreaView>
