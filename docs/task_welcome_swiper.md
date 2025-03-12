@@ -13,39 +13,39 @@ This checklist provides a comprehensive breakdown of tasks required to implement
 
 ### 2.1: Basic Swiper Setup
 
-- [ ] Create a reference to the Swiper component using useRef: `const swiperRef = useRef(null)`
-- [ ] Import the onboarding data from constants/index.ts: `import { onboarding } from '../../constants'`
-- [ ] Modify the welcome.tsx component to wrap the content in a Swiper component
-- [ ] Configure the Swiper with the following props:
-  - [ ] `loop={false}` to disable looping
-  - [ ] `index={0}` to start at the first slide
-  - [ ] `showsPagination={false}` to hide default pagination
-  - [ ] `ref={swiperRef}` to store a reference to the Swiper
-  - [ ] `onIndexChanged={(index) => setCurrentIndex(index)}` to track the current slide index
+- [x] Create a reference to the Swiper component using useRef: `const swiperRef = useRef(null)`
+- [x] Import the onboarding data from constants/index.ts: `import { onboarding } from '../../constants'`
+- [x] Modify the welcome.tsx component to wrap the content in a Swiper component
+- [x] Configure the Swiper with the following props:
+  - [x] `loop={false}` to disable looping
+  - [x] `index={0}` to start at the first slide
+  - [x] `showsPagination={false}` to hide default pagination
+  - [x] `ref={swiperRef}` to store a reference to the Swiper
+  - [x] `onIndexChanged={(index) => setCurrentIndex(index)}` to track the current slide index
 
 ### 2.2: State Management
 
-- [ ] Create a state variable to track the current slide index: `const [currentIndex, setCurrentIndex] = useState(0)`
-- [ ] Create a helper function to determine if the current slide is the last slide: `const isLastSlide = currentIndex === onboarding.length - 1`
+- [x] Create a state variable to track the current slide index: `const [currentIndex, setCurrentIndex] = useState(0)`
+- [x] Create a helper function to determine if the current slide is the last slide: `const isLastSlide = currentIndex === onboarding.length - 1`
 
 ### 2.3: Dynamic Content Rendering
 
-- [ ] Replace the static content with a dynamic mapping through the onboarding array
-- [ ] Create a slide component or template structure that will be used for each slide
-- [ ] Ensure each slide contains:
-  - [ ] The correct image from onboarding[index].image
-  - [ ] The title from onboarding[index].title
-  - [ ] The description from onboarding[index].description
-- [ ] Maintain the same layout structure as the original welcome.tsx
-- [ ] Ensure the "Skip" button remains at the top right of all slides
-- [ ] Verify the SafeAreaView wraps the entire component properly
+- [x] Replace the static content with a dynamic mapping through the onboarding array
+- [x] Create a slide component or template structure that will be used for each slide
+- [x] Ensure each slide contains:
+  - [x] The correct image from onboarding[index].image
+  - [x] The title from onboarding[index].title
+  - [x] The description from onboarding[index].description
+- [x] Maintain the same layout structure as the original welcome.tsx
+- [x] Ensure the "Skip" button remains at the top right of all slides
+- [x] Verify the SafeAreaView wraps the entire component properly
 
 ### 2.4: Initial Testing and Validation
 
-- [ ] Test horizontal swiping gestures to ensure they move between slides
-- [ ] Verify all three slides show the correct content from the onboarding data
-- [ ] Check that the swiper doesn't loop back to the first slide after the third slide
-- [ ] Verify the layout is consistent across all slides
+- [x] Test horizontal swiping gestures to ensure they move between slides
+- [x] Verify all three slides show the correct content from the onboarding data
+- [x] Check that the swiper doesn't loop back to the first slide after the third slide
+- [x] Verify the layout is consistent across all slides
 
 **IMPORTANT VALIDATION CHECKPOINT**: Before proceeding to Step 3, confirm that:
 
