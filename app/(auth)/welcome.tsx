@@ -9,16 +9,10 @@ import {
 } from "react-native";
 import Swiper from "react-native-swiper";
 
+import { onboarding } from "@/constants";
+
 import PrimaryButton from "../../components/PrimaryButton";
 import ProgressIndicator from "../../components/ProgressIndicator";
-import { onboarding } from "../../constants";
-
-// Import images directly
-const onboardingImages = [
-  require("../../assets/images/onboarding1.png"),
-  require("../../assets/images/onboarding2.png"),
-  require("../../assets/images/onboarding3.png"),
-];
 
 const Welcome = () => {
   const router = useRouter();
@@ -44,7 +38,6 @@ const Welcome = () => {
         index={0}
         showsPagination={false}
         onIndexChanged={(index) => setCurrentIndex(index)}
-        style={{ flex: 1 }}
       >
         {onboarding.map((item, index) => (
           <View
@@ -53,7 +46,7 @@ const Welcome = () => {
           >
             {/* Car and driver image */}
             <Image
-              source={onboardingImages[index]}
+              source={item.image}
               className="w-full h-64 object-contain mb-8"
               resizeMode="contain"
             />

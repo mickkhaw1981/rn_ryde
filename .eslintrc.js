@@ -25,4 +25,12 @@ module.exports = {
       },
     ],
   },
+  settings: {
+    "import/resolver": {
+      typescript: {}, // this uses <root>/tsconfig.json
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
+  },
 };
