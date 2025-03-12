@@ -13,6 +13,13 @@ import PrimaryButton from "../../components/PrimaryButton";
 import ProgressIndicator from "../../components/ProgressIndicator";
 import { onboarding } from "../../constants";
 
+// Import images directly
+const onboardingImages = [
+  require("../../assets/images/onboarding1.png"),
+  require("../../assets/images/onboarding2.png"),
+  require("../../assets/images/onboarding3.png"),
+];
+
 const Welcome = () => {
   const router = useRouter();
   const swiperRef = useRef<any>(null);
@@ -46,7 +53,7 @@ const Welcome = () => {
           >
             {/* Car and driver image */}
             <Image
-              source={item.image}
+              source={onboardingImages[index]}
               className="w-full h-64 object-contain mb-8"
               resizeMode="contain"
             />
