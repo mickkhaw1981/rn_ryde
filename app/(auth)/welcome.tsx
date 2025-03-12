@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import Swiper from "react-native-swiper";
 
 import PrimaryButton from "../../components/PrimaryButton";
 import ProgressIndicator from "../../components/ProgressIndicator";
