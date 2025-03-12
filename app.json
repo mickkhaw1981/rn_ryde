@@ -46,6 +46,14 @@
             "./assets/fonts/PlusJakartaSans-SemiBold.ttf"
           ]
         }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#2F80ED"
+        }
       ]
     ],
     "experiments": {
