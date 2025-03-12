@@ -4,8 +4,6 @@ import {
   Image,
   Text,
   ImageSourcePropType,
-  StyleProp,
-  ViewStyle,
 } from "react-native";
 
 interface SocialButtonProps {

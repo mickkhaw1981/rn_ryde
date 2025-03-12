@@ -7,6 +7,11 @@
     "icon": "./assets/images/icon.png",
     "scheme": "ryde",
     "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2F80ED"
+    },
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
@@ -23,14 +28,23 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
       [
-        "expo-splash-screen",
+        "expo-router",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "origin": "https://uber.dev/"
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/PlusJakartaSans-Bold.ttf",
+            "./assets/fonts/PlusJakartaSans-ExtraBold.ttf",
+            "./assets/fonts/PlusJakartaSans-Light.ttf",
+            "./assets/fonts/PlusJakartaSans-Medium.ttf",
+            "./assets/fonts/PlusJakartaSans-Regular.ttf",
+            "./assets/fonts/PlusJakartaSans-SemiBold.ttf"
+          ]
         }
       ]
     ],
