@@ -15,6 +15,11 @@ interface FormFieldProps {
   handleChangeText: (text: string) => void;
   otherStyles?: string;
   keyboardType?: KeyboardTypeOptions;
+  icon?: React.ReactNode;
+  containerStyle?: string;
+  labelStyle?: string;
+  iconStyle?: string;
+  secureTextEntry?: boolean;
 }
 
 const FormField = ({
@@ -24,36 +29,49 @@ const FormField = ({
   handleChangeText,
   otherStyles = "",
   keyboardType = "default",
+  icon,
+  containerStyle = "",
+  labelStyle = "",
+  iconStyle = "",
+  secureTextEntry = false,
 }: FormFieldProps) => {
   const [showPassword, setShowPassword] = useState(false);
+  const isPassword = secureTextEntry || title === "Password";
 
   return (
-    <View className={`w-full space-y-2 ${otherStyles}`}>
-      <Text className="text-base font-medium mb-2">{title}</Text>
-      <View className="relative">
-        <TextInput
-          className="border border-gray-300 rounded-xl px-4 py-3 w-full"
-          value={value}
-          onChangeText={handleChangeText}
-          keyboardType={keyboardType}
-          style={{ height: 50 }}
-          autoCapitalize="none"
-          placeholder={placeholder}
-          placeholderTextColor="#7b7b8b"
-          secureTextEntry={title === "Password" && !showPassword}
-        />
-        {title === "Password" && (
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-0 bottom-0 justify-center"
-          >
-            {showPassword ? (
-              <EyeOff size={20} color="#7b7b8b" />
-            ) : (
-              <Eye size={20} color="#7b7b8b" />
-            )}
-          </TouchableOpacity>
-        )}
+    <View className={`w-full space-y-2 ${otherStyles} ${containerStyle}`}>
+      <Text
+        className={`text-base font-semibold mb-2 text-[#333333] ${labelStyle}`}
+      >
+        {title}
+      </Text>
+      <View className="relative bg-[#F6F8FA] rounded-full">
+        <View className="flex-row items-center px-4 py-3">
+          {icon && <View className={`mr-3 ${iconStyle}`}>{icon}</View>}
+          <TextInput
+            className="flex-1 text-[15px] text-[#333333]"
+            value={value}
+            onChangeText={handleChangeText}
+            keyboardType={keyboardType}
+            style={{ height: 24 }}
+            autoCapitalize="none"
+            placeholder={placeholder}
+            placeholderTextColor="#ADADAD"
+            secureTextEntry={isPassword && !showPassword}
+          />
+          {isPassword && (
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              className="justify-center"
+            >
+              {showPassword ? (
+                <EyeOff size={20} color="#333333" />
+              ) : (
+                <Eye size={20} color="#333333" />
+              )}
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </View>
   );
