@@ -22,6 +22,24 @@ export default function TabsLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="chat"
+        options={{
+          title: "Chat",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="chatbox-ellipses" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="rides"
+        options={{
+          title: "Rides",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="car" size={24} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
