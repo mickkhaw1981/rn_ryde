@@ -6,6 +6,8 @@ import {
   Alert,
   Image,
   ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
   SafeAreaView,
   ScrollView,
   Text,
@@ -128,176 +130,186 @@ const SignUp = () => {
 
   return (
     <SafeAreaView className="h-full bg-white">
-      <ScrollView className="flex-1">
-        {/* Header Image Section */}
-        <View className="h-[220px] w-full">
-          <ImageBackground
-            source={images.signUpCar}
-            className="w-full h-full"
-            resizeMode="cover"
-          >
-            {/* Gradient overlay */}
-            <View className="w-full h-full bg-gradient-to-b from-transparent to-white"></View>
-          </ImageBackground>
-        </View>
-
-        {/* Content Section */}
-        <View className="w-full px-6 pt-4 pb-8">
-          {/* Heading */}
-          <Text className="text-2xl font-JakartaBold text-[#333333] mb-6">
-            Create Your Account
-          </Text>
-          {/* Form Fields */}
-          <View className="mb-6">
-            <View className="mb-4">
-              <FormField
-                title="Name"
-                placeholder="Enter name"
-                value={form.name}
-                handleChangeText={(text: string) => {
-                  setForm((prevForm) => ({
-                    ...prevForm,
-                    name: text,
-                  }));
-                }}
-                icon={<User size={20} color="#858585" />}
-              />
-            </View>
-
-            <View className="mb-4">
-              <FormField
-                title="Email"
-                placeholder="Enter email"
-                value={form.email}
-                handleChangeText={(text: string) => {
-                  setForm((prevForm) => ({
-                    ...prevForm,
-                    email: text,
-                  }));
-                }}
-                keyboardType="email-address"
-                icon={<Mail size={20} color="#858585" />}
-              />
-            </View>
-
-            <View>
-              <FormField
-                title="Password"
-                placeholder="Enter password"
-                value={form.password}
-                handleChangeText={(text: string) => {
-                  setForm((prevForm) => ({
-                    ...prevForm,
-                    password: text,
-                  }));
-                }}
-                secureTextEntry
-                icon={<Lock size={20} color="#858585" />}
-              />
-            </View>
-          </View>
-          {/* Sign Up Button */}
-          <PrimaryButton
-            title="Sign Up"
-            onPress={onSignUpPress}
-            bgVariant="primary"
-            textVariant="default"
-            isLoading={isSubmitting}
-            className="shadow-md"
-          />
-          {/* Divider */}
-          <Divider text="Or" />
-          {/* Google Sign In Button */}
-          <PrimaryButton
-            title="Log In with Google"
-            onPress={handleGoogleSignIn}
-            bgVariant="outline"
-            textVariant="primary"
-            IconLeft={({ size, color, style }) => (
-              <Image
-                source={icons.google}
-                style={[{ width: size, height: size }, style]}
-              />
-            )}
-          />
-          {/* Already have an account */}
-          <View className="flex-row justify-center mt-6">
-            <Text className="text-[17px] font-JakartaMedium text-[#858585]">
-              Already have an account?{" "}
-            </Text>
-            <Link
-              href="/sign-in"
-              className="text-[17px] font-JakartaMedium text-primary-500"
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+      >
+        <ScrollView
+          className="flex-1"
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Header Image Section */}
+          <View className="h-[220px] w-full">
+            <ImageBackground
+              source={images.signUpCar}
+              className="w-full h-full"
+              resizeMode="cover"
             >
-              Sign In
-            </Link>
+              {/* Gradient overlay */}
+              <View className="w-full h-full bg-gradient-to-b from-transparent to-white"></View>
+            </ImageBackground>
           </View>
-          {/* Pending state modal */}
-          <ReactNativeModal
-            isVisible={verification.state === "pending"}
-            onModalHide={() => {
-              if (verification.state === "success") {
-                setShowSuccessModal(true);
-              }
-            }}
-          >
-            <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
-              <Text className="text-2xl text-center font-JakartaBold text-stone-950 mb-6">
-                Verification
-              </Text>
-              <Text className="text-base text-center font-JakartaMedium text-stone-500 mb-6">
-                We've sent a verification code to {form.email}
-              </Text>
-              <FormField
-                title="Code"
-                icon={<Lock size={20} color="#858585" />}
-                value={verification.code}
-                keyboardType="number-pad"
-                handleChangeText={(text: string) => {
-                  setVerification((prev) => ({ ...prev, code: text }));
-                }}
-                placeholder="123456"
-              />
-              {/* handle verifircation error */}
-              {verification.error && (
-                <Text className="text-red-500 text-center font-JakartaMedium mb-6">
-                  {verification.error}
-                </Text>
+
+          {/* Content Section */}
+          <View className="w-full px-6 pt-4 pb-8">
+            {/* Heading */}
+            <Text className="text-2xl font-JakartaBold text-[#333333] mb-6">
+              Create Your Account
+            </Text>
+            {/* Form Fields */}
+            <View className="mb-6">
+              <View className="mb-4">
+                <FormField
+                  title="Name"
+                  placeholder="Enter name"
+                  value={form.name}
+                  handleChangeText={(text: string) => {
+                    setForm((prevForm) => ({
+                      ...prevForm,
+                      name: text,
+                    }));
+                  }}
+                  icon={<User size={20} color="#858585" />}
+                />
+              </View>
+
+              <View className="mb-4">
+                <FormField
+                  title="Email"
+                  placeholder="Enter email"
+                  value={form.email}
+                  handleChangeText={(text: string) => {
+                    setForm((prevForm) => ({
+                      ...prevForm,
+                      email: text,
+                    }));
+                  }}
+                  keyboardType="email-address"
+                  icon={<Mail size={20} color="#858585" />}
+                />
+              </View>
+
+              <View>
+                <FormField
+                  title="Password"
+                  placeholder="Enter password"
+                  value={form.password}
+                  handleChangeText={(text: string) => {
+                    setForm((prevForm) => ({
+                      ...prevForm,
+                      password: text,
+                    }));
+                  }}
+                  secureTextEntry
+                  icon={<Lock size={20} color="#858585" />}
+                />
+              </View>
+            </View>
+            {/* Sign Up Button */}
+            <PrimaryButton
+              title="Sign Up"
+              onPress={onSignUpPress}
+              bgVariant="primary"
+              textVariant="default"
+              isLoading={isSubmitting}
+              className="shadow-md"
+            />
+            {/* Divider */}
+            <Divider text="Or" />
+            {/* Google Sign In Button */}
+            <PrimaryButton
+              title="Log In with Google"
+              onPress={handleGoogleSignIn}
+              bgVariant="outline"
+              textVariant="primary"
+              IconLeft={({ size, color, style }) => (
+                <Image
+                  source={icons.google}
+                  style={[{ width: size, height: size }, style]}
+                />
               )}
-              <PrimaryButton
-                title="Verify"
-                onPress={onVerifyPress}
-                className="mt-5 bg-success-500"
-              />
-            </View>
-          </ReactNativeModal>
-          {/* Success state modal */}
-          <ReactNativeModal isVisible={showSuccessModal}>
-            <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
-              <Image
-                source={images.check}
-                className="w-[80px] h-[80px] mx-auto my-5"
-              />
-              <Text className="text-2xl text-center font-JakartaBold text-stone-950 mb-6">
-                Verification successful
+            />
+            {/* Already have an account */}
+            <View className="flex-row justify-center mt-6">
+              <Text className="text-[17px] font-JakartaMedium text-[#858585]">
+                Already have an account?{" "}
               </Text>
-              <Text className="text-base text-center font-JakartaMedium text-stone-500 mb-6">
-                You have successfully verified your account.
-              </Text>
-              <PrimaryButton
-                title="Go to Home"
-                onPress={() => {
-                  setShowSuccessModal(false);
-                  router.push("/(root)/(tabs)/home");
-                }}
-                bgVariant="primary"
-                textVariant="default"
-                className="mt-5"
-              />
+              <Link
+                href="/sign-in"
+                className="text-[17px] font-JakartaMedium text-primary-500"
+              >
+                Sign In
+              </Link>
             </View>
-          </ReactNativeModal>
-        </View>
-      </ScrollView>
+            {/* Pending state modal */}
+            <ReactNativeModal
+              isVisible={verification.state === "pending"}
+              onModalHide={() => {
+                if (verification.state === "success") {
+                  setShowSuccessModal(true);
+                }
+              }}
+            >
+              <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
+                <Text className="text-2xl text-center font-JakartaBold text-stone-950 mb-6">
+                  Verification
+                </Text>
+                <Text className="text-base text-center font-JakartaMedium text-stone-500 mb-6">
+                  We've sent a verification code to {form.email}
+                </Text>
+                <FormField
+                  title="Code"
+                  icon={<Lock size={20} color="#858585" />}
+                  value={verification.code}
+                  keyboardType="number-pad"
+                  handleChangeText={(text: string) => {
+                    setVerification((prev) => ({ ...prev, code: text }));
+                  }}
+                  placeholder="123456"
+                />
+                {/* handle verifircation error */}
+                {verification.error && (
+                  <Text className="text-red-500 text-center font-JakartaMedium mb-6">
+                    {verification.error}
+                  </Text>
+                )}
+                <PrimaryButton
+                  title="Verify"
+                  onPress={onVerifyPress}
+                  className="mt-5 bg-success-500"
+                />
+              </View>
+            </ReactNativeModal>
+            {/* Success state modal */}
+            <ReactNativeModal isVisible={showSuccessModal}>
+              <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
+                <Image
+                  source={images.check}
+                  className="w-[80px] h-[80px] mx-auto my-5"
+                />
+                <Text className="text-2xl text-center font-JakartaBold text-stone-950 mb-6">
+                  Verification successful
+                </Text>
+                <Text className="text-base text-center font-JakartaMedium text-stone-500 mb-6">
+                  You have successfully verified your account.
+                </Text>
+                <PrimaryButton
+                  title="Go to Home"
+                  onPress={() => {
+                    setShowSuccessModal(false);
+                    router.push("/(root)/(tabs)/home");
+                  }}
+                  bgVariant="primary"
+                  textVariant="default"
+                  className="mt-5"
+                />
+              </View>
+            </ReactNativeModal>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
