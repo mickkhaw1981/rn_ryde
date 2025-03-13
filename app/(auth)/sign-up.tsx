@@ -56,6 +56,8 @@ const SignUp = () => {
   const onSignUpPress = async () => {
     if (!isLoaded) return;
 
+    setIsSubmitting(true);
+
     // Start sign-up process using email and password provided
     try {
       await signUp.create({
@@ -77,6 +79,8 @@ const SignUp = () => {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       Alert.alert("Error", err.errors?.[0]?.longMessage || "Sign up failed");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
