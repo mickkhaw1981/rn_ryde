@@ -1,18 +1,19 @@
 import { Link } from "expo-router";
+import { Lock, Mail, User } from "lucide-react-native";
 import { useState } from "react";
 import {
   Image,
+  ImageBackground,
   SafeAreaView,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 
-import CustomButton from "@/components/CustomButton";
 import Divider from "@/components/Divider";
 import FormField from "@/components/FormField";
-import SocialButton from "@/components/SocialButton";
+import PrimaryButton from "@/components/PrimaryButton";
+import { icons, images } from "@/constants";
 
 const SignIn = () => {
   // State for form fields
@@ -20,15 +21,16 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-  // State for Sign In button loading
+  // State for Sign Up button loading
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Handle Google Sign In. Add new ones for other social media
+  // Handle Google Sign In
   const handleGoogleSignIn = () => {
     console.log("Google Sign In");
   };
 
-  const submit = () => {
+  // Handle Sign Up button press
+  const onSignInPress = () => {
     setIsSubmitting(true);
     console.log(form);
     // Simulate API call completion
@@ -37,59 +39,97 @@ const SignIn = () => {
 
   return (
     <SafeAreaView className="h-full bg-white">
-      <ScrollView>
-        <View className="w-full h-full justify-center px-4 my-6 items-center">
-          <Image
-            source={require("../../assets/images/react-logo.png")}
-            className="w-16 h-16 mb-10"
-            resizeMode="contain"
-          />
-          <Text className="text-2xl font-bold mb-5">Sign In</Text>
-          <FormField
-            title="Email"
-            placeholder="Enter your email"
-            value={form.email}
-            handleChangeText={(text: string) => {
-              setForm((prevForm) => ({
-                ...prevForm,
-                email: text,
-              }));
-            }}
-            otherStyles="mt-7 w-full"
-            keyboardType="email-address"
-          />
-          <FormField
-            title="Password"
-            placeholder="Enter your password"
-            value={form.password}
-            handleChangeText={(text: string) => {
-              setForm((prevForm) => ({
-                ...prevForm,
-                password: text,
-              }));
-            }}
-            otherStyles="mt-4 w-full"
-          />
-          <View className="w-full flex items-end mt-1">
-            <TouchableOpacity onPress={() => console.log("Forgot password")}>
-              <Text className="text-sm text-red-500">Forgot password?</Text>
-            </TouchableOpacity>
+      <ScrollView className="flex-1">
+        {/* Header Image Section */}
+        <View className="h-[220px] w-full">
+          <ImageBackground
+            source={images.signUpCar}
+            className="w-full h-full"
+            resizeMode="cover"
+          >
+            {/* Gradient overlay */}
+            <View className="w-full h-full bg-gradient-to-b from-transparent to-white"></View>
+          </ImageBackground>
+        </View>
+
+        {/* Content Section */}
+        <View className="w-full px-6 pt-4 pb-8">
+          {/* Heading */}
+          <Text className="text-2xl font-JakartaBold text-[#333333] mb-6">
+            Welcome 👋
+          </Text>
+
+          {/* Form Fields */}
+          <View className="mb-6">
+            <View className="mb-4">
+              <FormField
+                title="Email"
+                placeholder="Enter email"
+                value={form.email}
+                handleChangeText={(text: string) => {
+                  setForm((prevForm) => ({
+                    ...prevForm,
+                    email: text,
+                  }));
+                }}
+                keyboardType="email-address"
+                icon={<Mail size={20} color="#858585" />}
+              />
+            </View>
+
+            <View>
+              <FormField
+                title="Password"
+                placeholder="Enter password"
+                value={form.password}
+                handleChangeText={(text: string) => {
+                  setForm((prevForm) => ({
+                    ...prevForm,
+                    password: text,
+                  }));
+                }}
+                secureTextEntry
+                icon={<Lock size={20} color="#858585" />}
+              />
+            </View>
           </View>
-          <CustomButton
+
+          {/* Sign Up Button */}
+          <PrimaryButton
             title="Sign In"
-            handlePress={submit}
-            containerStyles="mt-7"
+            onPress={onSignInPress}
+            bgVariant="primary"
+            textVariant="default"
             isLoading={isSubmitting}
+            className="shadow-md"
           />
-          <Divider text="OR" />
-          <SocialButton
-            logo={require("../../assets/icons/google.png")}
-            text="Sign in with Google"
+
+          {/* Divider */}
+          <Divider text="Or" />
+
+          {/* Google Sign In Button */}
+          <PrimaryButton
+            title="Log In with Google"
             onPress={handleGoogleSignIn}
+            bgVariant="outline"
+            textVariant="primary"
+            IconLeft={({ size, color, style }) => (
+              <Image
+                source={icons.google}
+                style={[{ width: size, height: size }, style]}
+              />
+            )}
           />
-          <View className="flex justify-center pt-5 flex-row gap-2">
-            <Text className="text-base">Don't have an account?</Text>
-            <Link href="/sign-up" className="text-base text-bold text-red-500">
+
+          {/* Already have an account */}
+          <View className="flex-row justify-center mt-6">
+            <Text className="text-[17px] font-JakartaMedium text-[#858585]">
+              Don't have an account?{" "}
+            </Text>
+            <Link
+              href="/sign-up"
+              className="text-[17px] font-JakartaMedium text-primary-500"
+            >
               Sign Up
             </Link>
           </View>
