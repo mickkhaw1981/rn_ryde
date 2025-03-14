@@ -1,156 +1,82 @@
-import { SignedIn, SignedOut, useUser, useAuth } from "@clerk/clerk-expo";
+import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Text,
   View,
-  TouchableOpacity,
-  StyleSheet,
+  SafeAreaView,
+  FlatList,
   ActivityIndicator,
+  Image,
 } from "react-native";
+import type { Ride } from "@/types/type";
+
+import RideCard from "@/components/RideCard";
+import mockRides from "@/dummy_data/mock_rides.json";
+
+// Define the type for a ride item
+// type Driver = { ... }
+// type RideItem = { ... }
 
 export default function Page() {
   const { user } = useUser();
-  const { signOut } = useAuth();
-  const router = useRouter();
-  const [apiResponse, setApiResponse] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [rides, setRides] = useState<any[]>([]);
 
-  const handleSignOut = () => {
-    signOut();
-  };
-
-  const fetchHelloWorldApi = async () => {
-    setLoading(true);
-    setApiResponse(null);
-    setError(null);
-
-    try {
-      const response = await fetch("/hello");
-      const data = await response.json();
-      setApiResponse(`Hello ${data.hello}`);
-    } catch (error) {
-      console.error("Error fetching from API:", error);
-      setError("Failed to fetch from API. Please try again.");
-    } finally {
+  // Simulate loading data with normal timing
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Load mock rides data
+      setRides(mockRides);
       setLoading(false);
+    }, 800); // Reasonable loading time for a good UX
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Empty component to handle both loading and empty states
+  const ListEmptyComponent = () => {
+    if (loading) {
+      return (
+        <View className="flex-1 items-center justify-center mt-10">
+          <ActivityIndicator size="large" color="#2F80ED" />
+          <Text className="mt-4 text-gray-500 font-JakartaMedium">
+            Loading rides...
+          </Text>
+        </View>
+      );
     }
+
+    return (
+      <View className="flex-1 items-center justify-center mt-10">
+        <Image
+          source={require("../../../assets/images/no-result.png")}
+          className="w-60 h-60"
+          resizeMode="contain"
+        />
+        <Text className="mt-4 text-lg font-JakartaBold">No rides found</Text>
+        <Text className="mt-2 text-gray-500 font-JakartaMedium text-center px-10">
+          You haven't taken any rides yet. Book your first ride now!
+        </Text>
+      </View>
+    );
   };
 
   return (
-    <View style={styles.container}>
-      <SignedIn>
-        <Text style={styles.greeting}>
-          Hello {user?.emailAddresses[0].emailAddress}
-        </Text>
-
-        {/* API Test Section */}
-        <View style={styles.apiSection}>
-          <TouchableOpacity
-            style={styles.apiTestButton}
-            onPress={fetchHelloWorldApi}
-            disabled={loading}
-          >
-            <Text style={styles.apiTestText}>
-              {loading ? "Loading..." : "Test Hello World API"}
-            </Text>
-            {loading && (
-              <ActivityIndicator color="white" style={styles.loader} />
-            )}
-          </TouchableOpacity>
-
-          {apiResponse && (
-            <View style={styles.responseContainer}>
-              <Text style={styles.responseTitle}>API Response:</Text>
-              <Text style={styles.responseText}>{apiResponse}</Text>
-            </View>
-          )}
-
-          {error && <Text style={styles.errorText}>{error}</Text>}
-        </View>
-
-        <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
-          <Text style={styles.signOutText}>Sign Out</Text>
-        </TouchableOpacity>
-      </SignedIn>
-      <SignedOut>
-        <Link href="/(auth)/sign-in">
-          <Text style={styles.link}>Sign in</Text>
-        </Link>
-        <Link href="/(auth)/sign-up">
-          <Text style={styles.link}>Sign up</Text>
-        </Link>
-      </SignedOut>
-    </View>
+    <SafeAreaView className="flex-1 bg-general-500">
+      <View className="px-4 py-6">
+        <Text className="text-2xl font-bold mb-4">Recent Rides</Text>
+        <FlatList
+          data={rides}
+          renderItem={({ item }) => <RideCard ride={item} />}
+          keyExtractor={(item) => item.ride_id}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 100 }}
+          className="px-5"
+          keyboardShouldPersistTaps="handled"
+          ListEmptyComponent={ListEmptyComponent}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  greeting: {
-    fontSize: 18,
-    marginBottom: 20,
-  },
-  apiSection: {
-    width: "100%",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  signOutButton: {
-    backgroundColor: "#f44336",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  signOutText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  apiTestButton: {
-    backgroundColor: "#2196F3",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  apiTestText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  loader: {
-    marginLeft: 10,
-  },
-  responseContainer: {
-    marginTop: 20,
-    padding: 15,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 8,
-    width: "100%",
-  },
-  responseTitle: {
-    fontWeight: "bold",
-    marginBottom: 5,
-    fontSize: 16,
-  },
-  responseText: {
-    fontSize: 16,
-  },
-  errorText: {
-    color: "#f44336",
-    marginTop: 10,
-    textAlign: "center",
-  },
-  link: {
-    fontSize: 16,
-    color: "#2196F3",
-    marginVertical: 10,
-  },
-});
