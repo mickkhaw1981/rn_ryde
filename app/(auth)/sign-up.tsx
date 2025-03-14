@@ -19,6 +19,7 @@ import Divider from "@/components/Divider";
 import FormField from "@/components/FormField";
 import PrimaryButton from "@/components/PrimaryButton";
 import { icons, images } from "@/constants";
+import { fetchAPI } from "@/lib/fetch";
 
 const SignUp = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -46,14 +47,6 @@ const SignUp = () => {
     console.log("Google Sign In");
   };
 
-  // // Handle Sign Up button press
-  // const onSignUpPress = () => {
-  //   setIsSubmitting(true);
-  //   console.log(form);
-  //   // Simulate API call completion
-  //   setTimeout(() => setIsSubmitting(false), 1000);
-  // };
-
   // From Clerk - Handle submission of sign-up form
   const onSignUpPress = async () => {
     if (!isLoaded) return;
@@ -65,6 +58,7 @@ const SignUp = () => {
       await signUp.create({
         emailAddress: form.email,
         password: form.password,
+        firstName: form.name,
       });
 
       // Send user an email with verification code
@@ -99,9 +93,15 @@ const SignUp = () => {
       // If verification was completed, set the session to active
       // and redirect the user
       if (signUpAttempt.status === "complete") {
-        {
-          /* TODO: Create user in database */
-        }
+        // Create user in database
+        await fetchAPI("/(api)/user", {
+          method: "POST",
+          body: JSON.stringify({
+            name: form.name,
+            email: form.email,
+            clerkId: signUpAttempt.createdUserId,
+          }),
+        });
         await setActive({ session: signUpAttempt.createdSessionId });
         setVerification({
           ...verification,
