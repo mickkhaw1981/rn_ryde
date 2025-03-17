@@ -1,4 +1,5 @@
 import { create } from "zustand";
+
 import type { LocationStore } from "@/types/type";
 
 // Location store slice

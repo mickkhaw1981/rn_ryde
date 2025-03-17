@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+
 import { calculateRegion, generateMarkersFromData } from "@/lib/map";
 import { useLocationStore } from "@/store";
 
 const Map = () => {
+  // Reference to the map component to programmatically control it (e.g., for animations)
   const mapRef = useRef<MapView>(null);
   const {
     userLatitude,
