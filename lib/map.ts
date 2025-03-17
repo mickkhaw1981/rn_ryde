@@ -1,4 +1,5 @@
 import { Region } from "react-native-maps";
+import type { MarkerData } from "@/types/type";
 
 export const calculateRegion = (
   latitude: number,
@@ -14,10 +15,19 @@ export const calculateRegion = (
   };
 };
 
-export const generateMarkersFromData = (data: {
-  userLocation?: { latitude: number; longitude: number } | null;
-  destination?: { latitude: number; longitude: number } | null;
-}) => {
+/**
+ * Generates map markers from location data and optional driver data
+ * @param data Object containing user location and destination coordinates
+ * @param drivers Optional array of driver marker data
+ * @returns Array of marker objects for the map
+ */
+export const generateMarkersFromData = (
+  data: {
+    userLocation?: { latitude: number; longitude: number } | null;
+    destination?: { latitude: number; longitude: number } | null;
+  },
+  drivers?: MarkerData[]
+) => {
   const markers = [];
 
   if (data.userLocation) {
@@ -43,6 +53,23 @@ export const generateMarkersFromData = (data: {
       title: "Destination",
       description: "Your destination",
       pinColor: "red",
+    });
+  }
+
+  // Add driver markers if provided
+  if (drivers && drivers.length > 0) {
+    drivers.forEach((driver) => {
+      markers.push({
+        id: `driver-${driver.id}`,
+        coordinate: {
+          latitude: driver.latitude,
+          longitude: driver.longitude,
+        },
+        title: driver.title,
+        description: `Rating: ${driver.rating}`,
+        isDriver: true,
+        driver: driver,
+      });
     });
   }
 
