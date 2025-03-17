@@ -157,7 +157,6 @@ export default function Page() {
           keyboardShouldPersistTaps="handled"
           ListEmptyComponent={ListEmptyComponent}
           ListHeaderComponent={ListHeaderComponent}
-          stickyHeaderIndices={[0]}
         />
       </View>
     </SafeAreaView>
