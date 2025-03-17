@@ -17,6 +17,8 @@ import GoogleTextInput from "@/components/GoogleTextInput";
 import Map from "@/components/Map";
 import RideCard from "@/components/RideCard";
 import mockRides from "@/dummy_data/mock_rides.json";
+import { getCurrentLocation, getAddressFromCoordinates } from "@/lib/location";
+import { useLocationStore } from "@/store";
 
 import type { Ride } from "@/types/type";
 
@@ -25,17 +27,42 @@ export default function Page() {
   const { signOut } = useAuth();
   const [loading, setLoading] = useState(true);
   const [rides, setRides] = useState<any[]>([]);
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const { setUserLocation, setDestinationLocation } = useLocationStore();
   const router = useRouter();
 
-  // Simulate loading data with normal timing
+  // Simulate loading data with normal timing and initialize location
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const loadData = async () => {
+      try {
+        // Initialize user location
+        const location = await getCurrentLocation();
+
+        if (location) {
+          const address = await getAddressFromCoordinates(
+            location.latitude,
+            location.longitude
+          );
+
+          setUserLocation({
+            latitude: location.latitude,
+            longitude: location.longitude,
+            address,
+          });
+        }
+      } catch (err) {
+        console.error("Error getting location:", err);
+        setLocationError(
+          "Unable to access your location. Please check your permissions."
+        );
+      }
+
       // Load mock rides data
       setRides(mockRides);
       setLoading(false);
-    }, 800); // Reasonable loading time for a good UX
+    };
 
-    return () => clearTimeout(timer);
+    loadData();
   }, []);
 
   // Handle user logout
@@ -63,9 +90,13 @@ export default function Page() {
     address: string;
   }) => {
     console.log("Selected location:", { latitude, longitude, address });
-    // In a real app, you would navigate to a map screen or set the location in a store
-    // For now, just log the selected location
-    console.log(`Selected: ${address} (${latitude}, ${longitude})`);
+
+    // Set as destination in the store
+    setDestinationLocation({
+      latitude,
+      longitude,
+      address,
+    });
 
     // Uncomment when you have a map route
     // router.push({
@@ -107,7 +138,13 @@ export default function Page() {
           Your Current Location
         </Text>
 
-        <Map />
+        {locationError ? (
+          <View className="h-[200px] mb-10 bg-gray-100 rounded-2xl flex items-center justify-center p-4">
+            <Text className="text-red-500 text-center">{locationError}</Text>
+          </View>
+        ) : (
+          <Map />
+        )}
 
         <Text className="text-xl font-JakartaBold text-gray-800 mb-4">
           Recent Rides
