@@ -1,5 +1,5 @@
 import Constants from "expo-constants";
-import { Search, MapPin, X } from "lucide-react-native";
+import { MapPin } from "lucide-react-native";
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -13,6 +13,12 @@ import {
   Platform,
   Alert,
 } from "react-native";
+import {
+  getIconByName,
+  getClearIcon,
+  SUGGESTION_ICON_SIZE,
+  SUGGESTION_ICON_COLOR,
+} from "@/components/icons";
 
 // Define a Suggestion type if not imported
 interface Suggestion {
@@ -23,7 +29,7 @@ interface Suggestion {
 
 // Define the props interface
 interface GoogleTextInputProps {
-  icon?: string; // 'search' or 'location'
+  icon?: string; // 'search' or 'location' or 'crosshair'
   initialLocation?: string;
   containerStyle?: string;
   textInputBackgroundColor?: string;
@@ -246,7 +252,11 @@ const GoogleTextInput: React.FC<GoogleTextInputProps> = ({
       style={styles.suggestionItem}
       onPress={() => handleSuggestionPress(item)}
     >
-      <MapPin size={18} color="#777777" style={styles.icon} />
+      <MapPin
+        size={SUGGESTION_ICON_SIZE}
+        color={SUGGESTION_ICON_COLOR}
+        style={styles.icon}
+      />
       <View style={styles.suggestionTextContainer}>
         <Text style={styles.mainText}>{item.mainText}</Text>
         <Text style={styles.secondaryText}>{item.secondaryText}</Text>
@@ -287,13 +297,7 @@ const GoogleTextInput: React.FC<GoogleTextInputProps> = ({
             { borderColor: isFocused ? "#4299e1" : "#EBEBEB" },
           ]}
         >
-          <View style={styles.iconContainer}>
-            {icon === "search" ? (
-              <Search size={20} color="#333333" strokeWidth={1.5} />
-            ) : (
-              <MapPin size={20} color="#333333" strokeWidth={1.5} />
-            )}
-          </View>
+          <View style={styles.iconContainer}>{getIconByName(icon)}</View>
 
           {!isFocused && !inputValue ? (
             // Fixed placeholder text when not focused
@@ -325,7 +329,7 @@ const GoogleTextInput: React.FC<GoogleTextInputProps> = ({
 
           {inputValue.length > 0 && (
             <TouchableOpacity onPress={clearInput} style={styles.clearButton}>
-              <X size={16} color="#999999" />
+              {getClearIcon()}
             </TouchableOpacity>
           )}
 

@@ -1,47 +1,54 @@
 import { useRouter } from "expo-router";
-import { ArrowLeft } from "lucide-react-native";
 import React from "react";
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-  StyleSheet,
-} from "react-native";
+import { Text, View } from "react-native";
 
+import GoogleTextInput from "@/components/GoogleTextInput";
+import PrimaryButton from "@/components/PrimaryButton";
 import RideLayout from "@/components/RideLayout";
 import { useLocationStore } from "@/store";
 
 const FindRide = () => {
   const router = useRouter();
-  const { userAddress, destinationAddress } = useLocationStore();
+  const {
+    userAddress,
+    destinationAddress,
+    setDestinationLocation,
+    setUserLocation,
+  } = useLocationStore();
 
   const handleBack = () => {
     router.back();
   };
 
   return (
-    <RideLayout>
-      {/* <View style={styles.header}>
-          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-            <ArrowLeft size={24} color="#000" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Find a Ride</Text>
-        </View>
-
-        <View style={styles.locationContainer}>
-          <View style={styles.locationCard}>
-            <Text style={styles.locationLabel}>Your Location:</Text>
-            <Text style={styles.locationText}>{userAddress || "Not set"}</Text>
-          </View>
-
-          <View style={styles.locationCard}>
-            <Text style={styles.locationLabel}>Destination:</Text>
-            <Text style={styles.locationText}>
-              {destinationAddress || "Not set"}
-            </Text>
-          </View>
-        </View> */}
+    <RideLayout title="Ride">
+      <View className="my-3">
+        <Text className="text-lg font-JakartaSemiBold mb-3">From</Text>
+        <GoogleTextInput
+          icon="location"
+          initialLocation={userAddress!}
+          handlePress={(location) => setUserLocation(location)}
+          placeholder="Enter your location"
+          containerStyle="bg-neutral-100"
+          textInputBackgroundColor="#f5f5f5"
+        />
+      </View>
+      <View className="my-3">
+        <Text className="text-lg font-JakartaSemiBold mb-3">To</Text>
+        <GoogleTextInput
+          icon="crosshair"
+          initialLocation={destinationAddress!}
+          handlePress={(location) => setDestinationLocation(location)}
+          placeholder="Enter your location"
+          containerStyle="bg-neutral-100"
+          textInputBackgroundColor="#transparent"
+        />
+      </View>
+      <PrimaryButton
+        title="Find Ride"
+        onPress={() => router.push("/(root)/confirm-ride")}
+        className="mt-5"
+      />
     </RideLayout>
   );
 };

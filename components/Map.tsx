@@ -126,28 +126,33 @@ const Map: React.FC<MapProps> = ({
       region={region}
       onMapReady={handleMapReady}
     >
-      {markers.map((marker) => (
-        <Marker
-          key={marker.id}
-          coordinate={marker.coordinate}
-          title={marker.title}
-          description={marker.description}
-          pinColor={marker.pinColor}
-        >
-          {marker.isDriver && (
-            <Image
-              source={icons.marker}
-              style={{
-                width: 32,
-                height: 32,
-                tintColor:
-                  marker.id === `driver-${selectedDriver}` ? "#00a3ff" : "#000",
-              }}
-              resizeMode="contain"
-            />
-          )}
-        </Marker>
-      ))}
+      {markers.map(
+        (marker) =>
+          marker && (
+            <Marker
+              key={marker.id}
+              coordinate={marker.coordinate}
+              title={marker.title}
+              description={marker.description}
+              pinColor={marker.pinColor}
+            >
+              {marker.isDriver && (
+                <Image
+                  source={icons.marker}
+                  style={{
+                    width: 32,
+                    height: 32,
+                    tintColor:
+                      marker.id === `driver-${selectedDriver}`
+                        ? "#00a3ff"
+                        : "#000",
+                  }}
+                  resizeMode="contain"
+                />
+              )}
+            </Marker>
+          )
+      )}
     </MapView>
   );
 };
