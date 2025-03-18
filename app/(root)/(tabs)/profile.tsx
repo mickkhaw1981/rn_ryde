@@ -8,6 +8,7 @@ import {
   View,
   ActivityIndicator,
 } from "react-native";
+import { router } from "expo-router";
 
 const Profile = () => {
   const { signOut } = useAuth();
@@ -36,6 +37,10 @@ const Profile = () => {
     }
   };
 
+  const navigateToPlaceAutocomplete = () => {
+    router.push("/place-autocomplete");
+  };
+
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-white">
       <Text className="text-lg mb-6">Profile</Text>
@@ -62,6 +67,16 @@ const Profile = () => {
 
         {error && <Text style={styles.errorText}>{error}</Text>}
       </View>
+
+      {/* Place Autocomplete Demo Link */}
+      <TouchableOpacity
+        style={styles.demoButton}
+        onPress={navigateToPlaceAutocomplete}
+      >
+        <Text style={styles.demoButtonText}>
+          Google Place Autocomplete Demo
+        </Text>
+      </TouchableOpacity>
 
       <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
         <Text style={styles.signOutText}>Sign Out</Text>
@@ -120,6 +135,17 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   signOutText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  demoButton: {
+    backgroundColor: "#4CAF50",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+  demoButtonText: {
     color: "white",
     fontWeight: "bold",
   },
