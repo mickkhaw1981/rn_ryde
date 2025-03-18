@@ -97,28 +97,6 @@ const Map: React.FC<MapProps> = ({
   if (!region) {
     // Default region until we get user location
     return (
-      <View className="h-[200px] mb-2 rounded-2xl overflow-hidden relative">
-        <MapView
-          ref={mapRef}
-          style={StyleSheet.absoluteFillObject}
-          showsPointsOfInterest={false}
-          showsUserLocation={true}
-          mapType="mutedStandard"
-          userInterfaceStyle="light"
-          initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-          onMapReady={handleMapReady}
-        />
-      </View>
-    );
-  }
-
-  return (
-    <View className="h-[200px] mb-2 rounded-2xl overflow-hidden relative">
       <MapView
         ref={mapRef}
         style={StyleSheet.absoluteFillObject}
@@ -126,35 +104,51 @@ const Map: React.FC<MapProps> = ({
         showsUserLocation={true}
         mapType="mutedStandard"
         userInterfaceStyle="light"
-        region={region}
+        initialRegion={{
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
         onMapReady={handleMapReady}
-      >
-        {markers.map((marker) => (
-          <Marker
-            key={marker.id}
-            coordinate={marker.coordinate}
-            title={marker.title}
-            description={marker.description}
-            pinColor={marker.pinColor}
-          >
-            {marker.isDriver && (
-              <Image
-                source={icons.marker}
-                style={{
-                  width: 32,
-                  height: 32,
-                  tintColor:
-                    marker.id === `driver-${selectedDriver}`
-                      ? "#00a3ff"
-                      : "#000",
-                }}
-                resizeMode="contain"
-              />
-            )}
-          </Marker>
-        ))}
-      </MapView>
-    </View>
+      />
+    );
+  }
+
+  return (
+    <MapView
+      ref={mapRef}
+      style={StyleSheet.absoluteFillObject}
+      showsPointsOfInterest={false}
+      showsUserLocation={true}
+      mapType="mutedStandard"
+      userInterfaceStyle="light"
+      region={region}
+      onMapReady={handleMapReady}
+    >
+      {markers.map((marker) => (
+        <Marker
+          key={marker.id}
+          coordinate={marker.coordinate}
+          title={marker.title}
+          description={marker.description}
+          pinColor={marker.pinColor}
+        >
+          {marker.isDriver && (
+            <Image
+              source={icons.marker}
+              style={{
+                width: 32,
+                height: 32,
+                tintColor:
+                  marker.id === `driver-${selectedDriver}` ? "#00a3ff" : "#000",
+              }}
+              resizeMode="contain"
+            />
+          )}
+        </Marker>
+      ))}
+    </MapView>
   );
 };
 

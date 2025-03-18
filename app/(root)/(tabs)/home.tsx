@@ -143,7 +143,7 @@ export default function Page() {
             <Text className="text-red-500 text-center">{locationError}</Text>
           </View>
         ) : (
-          <View>
+          <View className="h-[200px] mb-2 rounded-2xl overflow-hidden relative">
             <Map />
           </View>
         )}
