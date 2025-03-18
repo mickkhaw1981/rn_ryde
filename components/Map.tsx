@@ -52,6 +52,9 @@ const Map: React.FC<MapProps> = ({
 
   // Generate driver locations when user location changes
   useEffect(() => {
+    // TODO: Remove this when we have real driver data
+    setDrivers(drivers);
+
     if (userLatitude && userLongitude) {
       const newRegion = calculateRegion(userLatitude, userLongitude);
       setRegion(newRegion);

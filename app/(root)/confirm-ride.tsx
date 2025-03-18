@@ -1,12 +1,10 @@
 import { router } from "expo-router";
-
 import React from "react";
 import { FlatList, Text, View } from "react-native";
 
 import DriverCard from "@/components/DriverCard";
 import PrimaryButton from "@/components/PrimaryButton";
 import RideLayout from "@/components/RideLayout";
-import mockDrivers from "@/dummy_data/mock_drivers";
 import { useDriverStore } from "@/store";
 
 const ConfirmRide = () => {
@@ -14,7 +12,7 @@ const ConfirmRide = () => {
   return (
     <RideLayout title="Choose a Driver" snapPoints={["65%", "85%"]}>
       <FlatList
-        data={mockDrivers}
+        data={drivers}
         renderItem={({ item }) => (
           <DriverCard
             selected={selectedDriver!}
