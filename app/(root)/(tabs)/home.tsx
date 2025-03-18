@@ -129,22 +129,30 @@ export default function Page() {
         <GoogleTextInput
           icon="search"
           initialLocation="Where do you want to go?"
-          containerStyle="mb-6"
+          containerStyle=""
           textInputBackgroundColor="#FFFFFF"
           handlePress={handleLocationSelect}
         />
+
+        {/* Explicit spacing */}
+        <View style={{ height: 20 }} />
 
         <Text className="text-xl font-JakartaBold text-gray-800 mb-4">
           Your Current Location
         </Text>
 
         {locationError ? (
-          <View className="h-[200px] mb-10 bg-gray-100 rounded-2xl flex items-center justify-center p-4">
+          <View className="h-[200px] bg-gray-100 rounded-2xl flex items-center justify-center p-4">
             <Text className="text-red-500 text-center">{locationError}</Text>
           </View>
         ) : (
-          <Map />
+          <View>
+            <Map />
+          </View>
         )}
+
+        {/* Explicit spacing */}
+        <View style={{ height: 20 }} />
 
         <Text className="text-xl font-JakartaBold text-gray-800 mb-4">
           Recent Rides

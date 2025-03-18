@@ -97,7 +97,7 @@ const Map: React.FC<MapProps> = ({
   if (!region) {
     // Default region until we get user location
     return (
-      <View className="h-[200px] mb-10 rounded-2xl overflow-hidden relative">
+      <View className="h-[200px] mb-2 rounded-2xl overflow-hidden relative">
         <MapView
           ref={mapRef}
           style={StyleSheet.absoluteFillObject}
@@ -118,7 +118,7 @@ const Map: React.FC<MapProps> = ({
   }
 
   return (
-    <View className="h-[200px] mb-10 rounded-2xl overflow-hidden relative">
+    <View className="h-[200px] mb-2 rounded-2xl overflow-hidden relative">
       <MapView
         ref={mapRef}
         style={StyleSheet.absoluteFillObject}

@@ -272,33 +272,22 @@ const GoogleTextInput: React.FC<GoogleTextInputProps> = ({
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={toggleFocus}
         activeOpacity={0.8}
-        className={`flex-row items-center border border-[#EBEBEB] rounded-full px-4 py-3 ${containerStyle}`}
-        style={{
-          backgroundColor: textInputBackgroundColor,
-          display: isFocused ? "none" : "flex",
+        onPress={() => {
+          if (!isFocused) {
+            setIsFocused(true);
+            setTimeout(() => inputRef.current?.focus(), 0);
+          }
         }}
+        style={{ width: "100%" }}
       >
-        <View className="mr-3">
-          {icon === "search" ? (
-            <Search size={20} color="#333333" strokeWidth={1.5} />
-          ) : (
-            <MapPin size={20} color="#333333" strokeWidth={1.5} />
-          )}
-        </View>
-
-        <Text
-          className="text-[#ADADAD] font-JakartaRegular text-base flex-1"
-          numberOfLines={1}
+        <View
+          style={[
+            styles.inputContainer,
+            { borderColor: isFocused ? "#4299e1" : "#EBEBEB" },
+          ]}
         >
-          {initialLocation}
-        </Text>
-      </TouchableOpacity>
-
-      {isFocused && (
-        <View style={styles.inputContainer}>
-          <View className="mr-3">
+          <View style={styles.iconContainer}>
             {icon === "search" ? (
               <Search size={20} color="#333333" strokeWidth={1.5} />
             ) : (
@@ -306,27 +295,37 @@ const GoogleTextInput: React.FC<GoogleTextInputProps> = ({
             )}
           </View>
 
-          <TextInput
-            ref={inputRef}
-            style={styles.textInput}
-            value={inputValue}
-            onChangeText={handleInputChange}
-            placeholder={placeholder}
-            placeholderTextColor="#ADADAD"
-            autoFocus={true}
-            onBlur={() => {
-              // Small delay to allow suggestion selection to work
-              setTimeout(() => {
-                if (!inputValue) {
-                  setIsFocused(false);
-                }
-              }, 200);
-            }}
-          />
+          {!isFocused && !inputValue ? (
+            // Fixed placeholder text when not focused
+            <Text style={styles.placeholderText}>{initialLocation}</Text>
+          ) : (
+            // TextInput when focused or has value
+            <TextInput
+              ref={inputRef}
+              style={styles.textInput}
+              value={inputValue}
+              onChangeText={handleInputChange}
+              placeholder={placeholder}
+              placeholderTextColor="#ADADAD"
+              onFocus={() => setIsFocused(true)}
+              selectionColor="#4299e1"
+              autoCapitalize="none"
+              spellCheck={false}
+              autoCorrect={false}
+              onBlur={() => {
+                // Small delay to allow suggestion selection to work
+                setTimeout(() => {
+                  if (!inputValue) {
+                    setIsFocused(false);
+                  }
+                }, 200);
+              }}
+            />
+          )}
 
           {inputValue.length > 0 && (
             <TouchableOpacity onPress={clearInput} style={styles.clearButton}>
-              <X size={18} color="#999999" style={{ padding: 2 }} />
+              <X size={16} color="#999999" />
             </TouchableOpacity>
           )}
 
@@ -338,7 +337,7 @@ const GoogleTextInput: React.FC<GoogleTextInputProps> = ({
             />
           )}
         </View>
-      )}
+      </TouchableOpacity>
 
       {showSuggestions && suggestions.length > 0 && (
         <View style={styles.suggestionsContainer}>
@@ -370,20 +369,36 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#EBEBEB",
     borderRadius: 25,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     backgroundColor: "#FFFFFF",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
+    height: 44, // Fixed height
+  },
+  iconContainer: {
+    marginRight: 12,
+    width: 20,
+    height: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
   textInput: {
     flex: 1,
     fontSize: 16,
+    fontWeight: "400",
     color: "#333333",
-    height: 24,
+    padding: 0,
+    margin: 0,
+  },
+  placeholderText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "400",
+    color: "#ADADAD",
   },
   clearButton: {
     padding: 8,
