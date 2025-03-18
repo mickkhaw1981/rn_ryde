@@ -98,11 +98,8 @@ export default function Page() {
       address,
     });
 
-    // Uncomment when you have a map route
-    // router.push({
-    //   pathname: "/map",
-    //   params: { latitude, longitude, address },
-    // });
+    // Navigate to find-ride screen
+    router.push("/(root)/find-ride" as any);
   };
 
   // Header component based on Figma design
