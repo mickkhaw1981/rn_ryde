@@ -9,6 +9,7 @@ import { useDriverStore } from "@/store";
 
 const ConfirmRide = () => {
   const { drivers, selectedDriver, setSelectedDriver } = useDriverStore();
+
   return (
     <RideLayout title="Choose a Driver" snapPoints={["65%", "85%"]}>
       <FlatList
@@ -16,7 +17,7 @@ const ConfirmRide = () => {
         renderItem={({ item }) => (
           <DriverCard
             selected={selectedDriver!}
-            setSelected={() => setSelectedDriver(item.driver_id)}
+            setSelected={() => setSelectedDriver(Number(item.id)!)}
             item={item}
           />
         )}
