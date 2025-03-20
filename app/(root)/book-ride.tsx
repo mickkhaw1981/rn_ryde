@@ -1,4 +1,5 @@
 import { useUser } from "@clerk/clerk-expo";
+import React from "react";
 import { Image, Text, View } from "react-native";
 
 import Payment from "@/components/Payment";
@@ -9,15 +10,23 @@ import { useDriverStore, useLocationStore } from "@/store";
 
 const BookRide = () => {
   const { user } = useUser();
-  const { userAddress, destinationAddress } = useLocationStore();
+  const {
+    userAddress,
+    destinationAddress,
+    userLatitude,
+    userLongitude,
+    destinationLatitude,
+    destinationLongitude,
+  } = useLocationStore();
   const { drivers, selectedDriver } = useDriverStore();
-
-  console.log({ drivers });
-  console.log({ selectedDriver });
 
   const driverDetails = drivers?.filter(
     (driver) => +driver.id === selectedDriver
   )[0];
+
+  // Format price for payment (convert from string to number in cents)
+  const priceString = driverDetails?.price?.replace("$", "") || "0";
+  const amount = parseFloat(priceString) * 100;
 
   return (
     <RideLayout title="Book Ride">
@@ -89,7 +98,19 @@ const BookRide = () => {
           </View>
         </View>
 
-        <Payment />
+        <Payment
+          amount={amount}
+          title={`Pay ${driverDetails?.price || "$0.00"}`}
+          driverId={selectedDriver || 0}
+          userEmail={user?.primaryEmailAddress?.emailAddress || ""}
+          originAddress={userAddress || ""}
+          destinationAddress={destinationAddress || ""}
+          originLatitude={userLatitude || 0}
+          originLongitude={userLongitude || 0}
+          destinationLatitude={destinationLatitude || 0}
+          destinationLongitude={destinationLongitude || 0}
+          rideTime={driverDetails?.time || 0}
+        />
       </>
     </RideLayout>
   );
