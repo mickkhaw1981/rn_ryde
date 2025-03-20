@@ -2,6 +2,20 @@
 
 This guide explains how to integrate Stripe payments into your React Native application.
 
+## SUMMARY
+
+Payment flow:
+
+1/ Fetch payment data from the server (client secret, ephemeral key, customer ID)
+2/ Initialize the payment sheet with these values using initPaymentSheet()
+3/ Present the payment sheet with presentPaymentSheet()
+4/ The payment confirmation happens automatically when the user completes the form and taps the payment button in the sheet
+
+The key line is:
+const { error } = await presentPaymentSheet();
+
+When presentPaymentSheet() resolves without an error, it means the payment was automatically confirmed. The confirmation happens internally within the Stripe SDK when the user completes the payment flow in the UI.
+
 ## Overview
 
 This integration combines all of the steps required to pay—collecting payment details and confirming the payment—into a single sheet that displays on top of your app.

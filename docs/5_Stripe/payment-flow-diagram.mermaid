@@ -1,0 +1,61 @@
+sequenceDiagram
+    participant User
+    participant BookRide as BookRide Component
+    participant Payment as Payment Component
+    participant PaymentAPI as /payment+api.ts
+    participant StripeSDK as Stripe SDK
+    participant RideAPI as /ride+api.ts
+    participant Database
+
+    Note over User,Database: Step 1: User Selects a Ride
+    User->>BookRide: Selects driver & clicks "Select Ride"
+    BookRide->>BookRide: Navigate to BookRide screen
+    BookRide->>Payment: Pass ride details (price, locations, driver info)
+
+    Note over User,Database: Step 2: Initialize Payment Sheet
+    Payment->>Payment: Initialize StripeProvider
+    Payment->>User: Display ride summary & "Pay Now" button
+    User->>Payment: Click "Pay Now" button
+    
+    Payment->>PaymentAPI: POST request with amount & customer info
+    
+    PaymentAPI->>StripeSDK: Create Stripe Customer
+    StripeSDK-->>PaymentAPI: Return Customer ID
+    
+    PaymentAPI->>StripeSDK: Create Ephemeral Key
+    StripeSDK-->>PaymentAPI: Return Ephemeral Key
+    
+    PaymentAPI->>StripeSDK: Create Payment Intent
+    StripeSDK-->>PaymentAPI: Return Payment Intent Client Secret
+    
+    PaymentAPI-->>Payment: Return payment data (client secret, ephemeral key, customer)
+    
+    Note over User,Database: Step 3: Present Payment Sheet
+    Payment->>StripeSDK: Initialize Payment Sheet
+    Payment->>StripeSDK: Present Payment Sheet
+    StripeSDK->>User: Display Payment Form
+    
+    Note over User,Database: Step 4: Process Payment
+    User->>StripeSDK: Enter card details & click "Pay"
+    StripeSDK->>StripeSDK: Process Payment
+    
+    alt Payment Successful
+        StripeSDK-->>Payment: Payment Succeeded
+        
+        Payment->>RideAPI: POST request with ride & payment details
+        RideAPI->>Database: Save ride with "paid" status
+        Database-->>RideAPI: Confirm ride saved
+        RideAPI-->>Payment: Return success & ride details
+        
+        Payment->>User: Show Success Modal
+    else Payment Failed
+        StripeSDK-->>Payment: Payment Failed with Error
+        Payment->>User: Show Error Modal
+    end
+    
+    Note over User,Database: Step 5: Finalize
+    alt Ride Created Successfully
+        Payment->>BookRide: Navigate to confirmation or upcoming rides
+    else Error in Ride Creation
+        Payment->>User: Show Error & Option to Retry
+    end
