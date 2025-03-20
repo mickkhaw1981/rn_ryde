@@ -1,8 +1,13 @@
 import { create } from "zustand";
 
-import mockDrivers from "@/dummy_data/mock_drivers";
-
-import type { LocationStore, DriverStore, MarkerData } from "@/types/type";
+import { fetchAPI } from "@/lib/fetch";
+import { mapDbDriverToInterface, mapDriverToMarkerData } from "@/lib/utils";
+import type {
+  LocationStore,
+  DriverStore,
+  MarkerData,
+  Driver,
+} from "@/types/type";
 
 // Location store slice
 export const useLocationStore = create<LocationStore>((set) => ({
@@ -29,55 +34,71 @@ export const useLocationStore = create<LocationStore>((set) => ({
 }));
 
 /**
- * Generates random driver locations near the provided user location
+ * Generates random driver locations near the provided user location using real driver data
  * @param userLatitude User's latitude
  * @param userLongitude User's longitude
- * @returns Array of driver markers with randomized locations
+ * @returns Promise resolving to Array of driver markers with randomized locations
  */
-export const generateDriversNearLocation = (
+export const generateDriversNearLocation = async (
   userLatitude: number,
   userLongitude: number
-): MarkerData[] => {
+): Promise<MarkerData[]> => {
   if (!userLatitude || !userLongitude) return [];
 
-  // Create a set to track used offsets to prevent drivers from overlapping
-  const usedOffsets = new Set<string>();
+  try {
+    // Fetch real driver data from API
+    const result = await fetchAPI("/(api)/driver");
 
-  return mockDrivers.map((driver) => {
-    // Generate random offsets between 0.001 and 0.005 (roughly 100m to 500m)
-    let latOffset: number;
-    let lngOffset: number;
-    let offsetKey: string;
+    if (!result || !result.data || !result.data.length) {
+      console.error("No driver data received from API");
+      return [];
+    }
 
-    // Make sure each driver has a unique position
-    do {
-      latOffset =
-        (Math.random() * 0.004 + 0.001) * (Math.random() > 0.5 ? 1 : -1);
-      lngOffset =
-        (Math.random() * 0.004 + 0.001) * (Math.random() > 0.5 ? 1 : -1);
-      offsetKey = `${latOffset.toFixed(5)},${lngOffset.toFixed(5)}`;
-    } while (usedOffsets.has(offsetKey));
+    // Map the database drivers to our interface structure
+    const drivers = result.data.map(mapDbDriverToInterface);
 
-    usedOffsets.add(offsetKey);
+    // Create a set to track used offsets to prevent drivers from overlapping
+    const usedOffsets = new Set<string>();
 
-    // Calculate new position
-    const latitude = userLatitude + latOffset;
-    const longitude = userLongitude + lngOffset;
+    // Generate random locations for each driver near the user
+    return drivers.map((driver: Driver) => {
+      // Generate random offsets between 0.001 and 0.005 (roughly 100m to 500m)
+      let latOffset: number;
+      let lngOffset: number;
+      let offsetKey: string;
 
-    // Convert driver to MarkerData format
-    return {
-      id: driver.driver_id,
-      latitude,
-      longitude,
-      title: `${driver.first_name} ${driver.last_name}`,
-      profile_image_url: driver.profile_image_url,
-      car_image_url: driver.car_image_url,
-      car_seats: driver.car_seats,
-      rating: driver.rating,
-      first_name: driver.first_name,
-      last_name: driver.last_name,
-    };
-  });
+      // Make sure each driver has a unique position
+      do {
+        latOffset =
+          (Math.random() * 0.004 + 0.001) * (Math.random() > 0.5 ? 1 : -1);
+        lngOffset =
+          (Math.random() * 0.004 + 0.001) * (Math.random() > 0.5 ? 1 : -1);
+        offsetKey = `${latOffset.toFixed(5)},${lngOffset.toFixed(5)}`;
+      } while (usedOffsets.has(offsetKey));
+
+      usedOffsets.add(offsetKey);
+
+      // Calculate new position
+      const latitude = userLatitude + latOffset;
+      const longitude = userLongitude + lngOffset;
+
+      // Convert driver to MarkerData format with the random location
+      const markerData = mapDriverToMarkerData(driver);
+
+      // Override the default latitude and longitude with our calculated values
+      return {
+        ...markerData,
+        latitude,
+        longitude,
+        // Add estimated time and price for the driver
+        time: Math.floor(Math.random() * 15) + 5, // Random time between 5-20 mins
+        price: (Math.floor(Math.random() * 20) + 10).toFixed(2), // Random price between $10-$30
+      };
+    });
+  } catch (error) {
+    console.error("Error generating drivers near location:", error);
+    return [];
+  }
 };
 
 // Driver store slice

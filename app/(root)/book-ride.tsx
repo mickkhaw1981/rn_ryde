@@ -1,23 +1,51 @@
 import { useUser } from "@clerk/clerk-expo";
 import { Image, Text, View } from "react-native";
+import { useEffect, useState } from "react";
 
 import Payment from "@/components/Payment";
 import RideLayout from "@/components/RideLayout";
 import { icons } from "@/constants";
 import { formatTime } from "@/lib/utils";
-import { useDriverStore, useLocationStore } from "@/store";
+import {
+  useDriverStore,
+  useLocationStore,
+  generateDriversNearLocation,
+} from "@/store";
 
 const BookRide = () => {
   const { user } = useUser();
-  const { userAddress, destinationAddress } = useLocationStore();
-  const { drivers, selectedDriver } = useDriverStore();
+  const { userAddress, destinationAddress, userLatitude, userLongitude } =
+    useLocationStore();
+  const { drivers, selectedDriver, setDrivers } = useDriverStore();
+  const [loading, setLoading] = useState(false);
 
-  console.log({ drivers });
-  console.log({ selectedDriver });
+  useEffect(() => {
+    const loadDrivers = async () => {
+      if (userLatitude && userLongitude) {
+        try {
+          setLoading(true);
 
-  const driverDetails = drivers?.filter(
-    (driver) => +driver.id === selectedDriver
-  )[0];
+          const nearbyDrivers = await generateDriversNearLocation(
+            userLatitude,
+            userLongitude
+          );
+
+          setDrivers(nearbyDrivers);
+        } catch (error) {
+          console.error("Failed to load drivers:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadDrivers();
+  }, [userLatitude, userLongitude, setDrivers]);
+
+  const driverDetails =
+    drivers && Array.isArray(drivers)
+      ? drivers.filter((driver) => +driver.id === selectedDriver)[0]
+      : null;
 
   return (
     <RideLayout title="Book Ride">

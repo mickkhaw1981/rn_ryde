@@ -19,7 +19,7 @@ const RideLayout = ({
   // For BottomSheet
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(
-    () => customSnapPoints || ["65%", "85%"],
+    () => customSnapPoints || ["25%", "65%", "85%"],
     [customSnapPoints]
   );
 
@@ -44,7 +44,7 @@ const RideLayout = ({
         <BottomSheet
           ref={bottomSheetRef}
           keyboardBehavior="extend"
-          index={2}
+          index={1}
           snapPoints={snapPoints}
         >
           <BottomSheetView style={{ flex: 1, padding: 20 }}>
