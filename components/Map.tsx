@@ -63,16 +63,26 @@ const Map: React.FC<MapProps> = ({
       mapRef.current?.animateToRegion(newRegion, 1000);
 
       // Generate driver locations near user
-      const generatedDrivers = generateDriversNearLocation(
-        userLatitude,
-        userLongitude
-      );
-      setDrivers(generatedDrivers);
+      const fetchDrivers = async () => {
+        try {
+          console.log("Fetching drivers near location...");
+          const generatedDrivers = await generateDriversNearLocation(
+            userLatitude,
+            userLongitude
+          );
+          console.log(`Retrieved ${generatedDrivers.length} drivers`);
+          setDrivers(generatedDrivers);
 
-      // If callback for driver times is provided, call it with the generated drivers
-      if (onDriverTimesCalculated) {
-        onDriverTimesCalculated(generatedDrivers);
-      }
+          // If callback for driver times is provided, call it with the generated drivers
+          if (onDriverTimesCalculated) {
+            onDriverTimesCalculated(generatedDrivers);
+          }
+        } catch (error) {
+          console.error("Error fetching drivers:", error);
+        }
+      };
+
+      fetchDrivers();
     }
   }, [userLatitude, userLongitude, setDrivers, onDriverTimesCalculated]);
 
@@ -82,6 +92,9 @@ const Map: React.FC<MapProps> = ({
       onMapReady();
     }
   };
+
+  // Add this before generating markers
+  console.log("Current drivers in store:", drivers);
 
   const markers = generateMarkersFromData(
     {
@@ -96,6 +109,9 @@ const Map: React.FC<MapProps> = ({
     },
     drivers
   ) as ExtendedMarker[];
+
+  // Add this after markers are generated
+  console.log("Generated markers:", markers);
 
   if (!region) {
     // Default region until we get user location
